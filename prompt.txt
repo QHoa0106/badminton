@@ -1,0 +1,1661 @@
+DỰ ÁN: WEBSITE QUẢN LÝ GIẢI CẦU LÔNG NỘI BỘ
+
+Hãy xây dựng một website quản lý giải đấu cầu lông nội bộ hoàn chỉnh, có giao diện chuyên nghiệp, hiện đại, dễ sử dụng và có đầy đủ nghiệp vụ thực tế.
+
+Đây không phải là website giới thiệu hoặc giao diện demo. Đây là ứng dụng quản lý giải đấu có dữ liệu thật, có Database, Authentication, phân quyền, thuật toán bốc thăm, tính tỷ số, bảng xếp hạng và quản lý lịch thi đấu.
+
+YÊU CẦU BẮT BUỘC: Toàn bộ giao diện website sử dụng tiếng Việt.
+
+Tên dự án: Badminton Tournament Management.
+
+PHẦN 1. CÔNG NGHỆ
+
+Sử dụng:
+
+ReactJS
+
+TypeScript
+
+Vite
+
+Tailwind CSS
+
+shadcn/ui
+
+Lucide Icons
+
+Framer Motion cho animation
+
+React Router cho routing
+
+Supabase cho Database và Backend Services
+
+Supabase PostgreSQL
+
+Supabase Authentication
+
+Supabase Realtime
+
+Không sử dụng LocalStorage làm nguồn dữ liệu chính.
+
+Không xây dựng backend Node.js/Express riêng.
+
+Sử dụng Supabase SDK để kết nối Database và các PostgreSQL Functions (RPC) cho nghiệp vụ cần xử lý phía server.
+
+Kết nối với Supabase project do người dùng sở hữu.
+
+Nếu Supabase chưa được kết nối, hãy hướng dẫn người dùng kết nối project riêng. Không tự động chuyển sang Lovable Cloud và không tạo backend giả lập.
+
+Không đưa service_role key hoặc secret key vào frontend.
+
+PHẦN 2. MỤC TIÊU HỆ THỐNG
+
+Website dùng để quản lý các giải cầu lông nội bộ.
+
+Giải đấu đầu tiên có cấu hình:
+
+24 vận động viên.
+
+3 nhóm trình độ: TB-, TBY, TBY+.
+
+12 đội đánh đôi.
+
+4 bảng đấu A, B, C, D.
+
+Mỗi bảng 3 đội.
+
+12 trận vòng bảng.
+
+8 đội vào vòng loại trực tiếp.
+
+4 sân đấu (cho phép Admin chỉnh sửa số lượng sân).
+
+Website phải hỗ trợ tạo nhiều giải đấu trong các năm khác nhau.
+
+Ví dụ:
+
+Giải cầu lông nội bộ 2026.
+
+Giải cầu lông nội bộ 2027.
+
+Giải cầu lông nội bộ 2028.
+
+Dữ liệu của mỗi giải phải độc lập hoàn toàn.
+
+Không để thay đổi giải đấu này ảnh hưởng đến giải đấu khác.
+
+Cho phép sao chép danh sách vận động viên từ giải đấu cũ sang giải đấu mới.
+
+PHẦN 3. PHÂN QUYỀN NGƯỜI DÙNG
+
+Có 3 vai trò.
+
+3.1. ADMIN – Ban tổ chức
+
+Admin có toàn quyền trong giải đấu được quản lý.
+
+Quyền:
+
+Tạo và quản lý giải đấu.
+
+Quản lý vận động viên.
+
+Quản lý trình độ.
+
+Bốc thăm ghép cặp.
+
+Random chia bảng.
+
+Chỉnh sửa đội.
+
+Tạo lịch thi đấu.
+
+Quản lý sân.
+
+Quản lý tài khoản trọng tài.
+
+Xem tất cả trận đấu.
+
+Nhập và sửa mọi tỷ số.
+
+Xác nhận kết quả.
+
+Reset vòng đấu.
+
+Thay đổi thiết lập giải đấu.
+
+Công bố giải đấu.
+
+Kết thúc giải đấu.
+
+3.2. REFEREE – Trọng tài
+
+Trọng tài phải đăng nhập.
+
+Quyền:
+
+Xem danh sách trận đấu.
+
+Xem lịch thi đấu.
+
+Xem sân thi đấu.
+
+Nhập tỷ số.
+
+Cộng điểm.
+
+Trừ điểm.
+
+Nhập điểm thủ công.
+
+Chỉnh sửa tỷ số đã nhập.
+
+Xác nhận kết quả trận đấu.
+
+Quan trọng: Tất cả trọng tài đều được phép cập nhật tất cả các trận đấu. Không giới hạn theo sân hoặc người được phân công.
+
+Trọng tài không được:
+
+Thay đổi vận động viên.
+
+Thay đổi đội.
+
+Thay đổi kết quả bốc thăm.
+
+Chia lại bảng.
+
+Thay đổi thể thức.
+
+Xóa giải đấu.
+
+3.3. SPECTATOR – Người xem
+
+Không cần đăng nhập.
+
+Quyền chỉ đọc:
+
+Xem thông tin giải đấu.
+
+Xem danh sách vận động viên.
+
+Xem 12 đội.
+
+Xem kết quả bốc thăm.
+
+Xem 4 bảng đấu.
+
+Xem lịch thi đấu.
+
+Xem tỷ số realtime.
+
+Xem bảng xếp hạng.
+
+Xem sơ đồ loại trực tiếp.
+
+Xem kết quả chung cuộc.
+
+Người xem không có bất kỳ quyền chỉnh sửa dữ liệu nào.
+
+Chỉ những giải đấu được Admin công khai mới hiển thị ở khu vực Spectator.
+
+3.4. Authentication
+
+Sử dụng Supabase Auth.
+
+Không mở đăng ký tài khoản công khai cho mọi người.
+
+Admin đầu tiên được thiết lập an toàn theo hướng dẫn trong Supabase Dashboard.
+
+Admin có thể mời tài khoản trọng tài.
+
+Vai trò được kiểm tra phía Database thông qua Row Level Security, không chỉ dựa vào việc ẩn hoặc hiện nút trên frontend.
+
+PHẦN 4. QUẢN LÝ VẬN ĐỘNG VIÊN
+
+Tổng số vận động viên mặc định: 24.
+
+Cơ cấu:
+
+Nhóm
+
+Số lượng
+
+TB-
+
+6
+
+TBY
+
+6
+
+TBY+
+
+12
+
+Tổng
+
+24
+
+Mỗi vận động viên có:
+
+ID.
+
+Họ tên.
+
+Nhóm trình độ.
+
+Ghi chú tùy chọn.
+
+Trạng thái tham gia.
+
+Giải đấu tham gia.
+
+Chức năng:
+
+Thêm vận động viên.
+
+Sửa thông tin.
+
+Xóa vận động viên nếu chưa phát sinh dữ liệu liên quan.
+
+Tìm kiếm.
+
+Lọc theo trình độ.
+
+Thống kê số lượng từng nhóm.
+
+Sao chép vận động viên từ giải trước.
+
+Import danh sách bằng Excel/CSV.
+
+Kiểm tra dữ liệu trước khi import.
+
+Không cho phép bắt đầu bốc thăm nếu chưa đủ điều kiện:
+
+Có 6 TB-.
+
+Có 6 TBY.
+
+Có 12 TBY+.
+
+Hiển thị cảnh báo rõ ràng khi sai số lượng.
+
+PHẦN 5. WHEEL OF NAMES – BỐC THĂM GHÉP CẶP
+
+Đây là một trong những chức năng quan trọng nhất của hệ thống.
+
+Tổng cộng có 12 đội, mỗi đội gồm 2 vận động viên.
+
+Có hai quy tắc ghép cặp.
+
+5.1. Nhóm cặp TB- + TBY
+
+Ghép ngẫu nhiên:
+
+1 vận động viên TB-.
+
+1 vận động viên TBY.
+
+Kết quả phải có đúng 6 cặp.
+
+5.2. Nhóm cặp TBY+ + TBY+
+
+Ghép ngẫu nhiên:
+
+2 vận động viên TBY+.
+
+Kết quả phải có đúng 6 cặp.
+
+5.3. Giao diện Wheel of Names
+
+Thiết kế vòng quay đẹp, hiện đại, có:
+
+Tên người chơi trên vòng quay.
+
+Màu sắc phân biệt nhóm trình độ.
+
+Kim chỉ kết quả.
+
+Animation quay mượt.
+
+Hiệu ứng khi chọn được người.
+
+Âm thanh khi quay có tùy chọn bật/tắt.
+
+Nút quay.
+
+Danh sách người chưa được chọn.
+
+Danh sách người đã được ghép.
+
+Cho phép tổ chức quy trình ghép cặp từng đội một.
+
+Với đội TB- + TBY:
+
+Random một người TB-.
+
+Random một người TBY.
+
+Ghép hai người thành một đội.
+
+Với đội TBY+:
+
+Random hai người TBY+.
+
+Ghép thành một đội.
+
+Mỗi người chỉ được xuất hiện trong một đội.
+
+Sau khi được ghép, người chơi bị loại khỏi danh sách chờ.
+
+5.4. Lịch sử bốc thăm
+
+Lưu:
+
+Thời điểm bốc thăm.
+
+Người thực hiện.
+
+Danh sách kết quả.
+
+Trạng thái xác nhận.
+
+Lịch sử random lại.
+
+Cho phép Admin xem lịch sử và bốc thăm lại khi chưa xác nhận.
+
+Khi xác nhận, khóa kết quả bốc thăm.
+
+Khi thực hiện lại thao tác không thể hoàn tác, phải có hộp thoại xác nhận.
+
+5.5. Tính ngẫu nhiên
+
+Kết quả random phải được sinh và lưu bằng nghiệp vụ phía Database, không chỉ tạo kết quả giả lập trong frontend.
+
+Frontend chỉ chịu trách nhiệm hiển thị hiệu ứng vòng quay tương ứng với kết quả thực tế.
+
+PHẦN 6. RANDOM CHIA 4 BẢNG
+
+Sau khi ghép đủ 12 đội, chuyển sang trang chia bảng.
+
+Có 4 bảng:
+
+Bảng A.
+
+Bảng B.
+
+Bảng C.
+
+Bảng D.
+
+Mỗi bảng có chính xác 3 đội.
+
+Có 6 đội loại TB- + TBY và 6 đội loại TBY+ + TBY+.
+
+6.1. Điều kiện random
+
+Phân bổ bắt buộc:
+
+Hai bảng có 2 đội TB- + TBY và 1 đội TBY+.
+
+Hai bảng có 1 đội TB- + TBY và 2 đội TBY+.
+
+Không cố định bảng nào thuộc kiểu phân bổ nào.
+
+Mỗi lần random phải tạo ra kết quả mới nhưng không vi phạm các điều kiện.
+
+6.2. Nút RANDOM CHIA BẢNG
+
+Tạo nút lớn:
+
+RANDOM CHIA BẢNG
+
+Khi bấm:
+
+Xáo trộn danh sách 12 đội.
+
+Random vị trí các bảng nhận từng loại phân bổ.
+
+Phân phối các đội theo điều kiện.
+
+Lưu kết quả tạm thời.
+
+Animation lần lượt công bố bảng A, B, C, D.
+
+Hiển thị toàn bộ kết quả.
+
+Có các nút:
+
+Random lại.
+
+Xem kết quả.
+
+Xác nhận chia bảng.
+
+Chỉ cho phép bắt đầu lịch thi đấu sau khi Admin xác nhận chia bảng.
+
+Lưu lịch sử chia bảng.
+
+PHẦN 7. THỂ THỨC VÒNG BẢNG
+
+Tổng cộng 12 đội.
+
+4 bảng, mỗi bảng 3 đội.
+
+Mỗi đội thi đấu với hai đội còn lại trong bảng.
+
+Mỗi bảng có 3 trận.
+
+Tổng vòng bảng có 12 trận.
+
+7.1. Luật tính điểm
+
+Mỗi trận:
+
+1 set.
+
+Điểm mục tiêu mặc định: 30.
+
+Điều kiện thắng:
+
+Đạt tối thiểu 30 điểm.
+
+Phải hơn đối thủ ít nhất 2 điểm.
+
+Không giới hạn điểm tối đa.
+
+Ví dụ:
+
+30-28: thắng.
+
+30-29: chưa thắng.
+
+31-29: thắng.
+
+32-30: thắng.
+
+Không tự động kết thúc ở 30 điểm nếu chưa dẫn trước 2 điểm.
+
+7.2. Tạo lịch vòng bảng tự động
+
+Tự sinh đủ 3 trận trong từng bảng.
+
+Ví dụ bảng A:
+
+A1 vs A2.
+
+A1 vs A3.
+
+A2 vs A3.
+
+Tổng cộng 12 trận.
+
+Không tạo trận trùng lặp.
+
+PHẦN 8. NHẬP TỶ SỐ CHO TRỌNG TÀI
+
+Đây là chức năng cần ưu tiên đặc biệt về UX.
+
+Tạo giao diện nhập điểm rõ ràng, dễ thao tác trên máy tính và điện thoại.
+
+8.1. Hai cách nhập điểm kết hợp
+
+Cách 1: Cộng/trừ điểm trực tiếp
+
+Có nút:
+
++1 điểm.
+
+-1 điểm.
+
+Khi bấm, điểm số được cập nhật.
+
+Cách 2: Nhập điểm thủ công
+
+Cho phép trọng tài nhập trực tiếp số điểm.
+
+Ví dụ:
+
+Đội A: 30.
+
+Đội B: 27.
+
+Có nút lưu thay đổi.
+
+Khi nhập điểm phải kiểm tra số nguyên không âm.
+
+8.2. Hiển thị thông tin trận đấu
+
+Hiển thị:
+
+Mã trận.
+
+Giai đoạn thi đấu.
+
+Bảng đấu.
+
+Sân đấu.
+
+Thời gian.
+
+Tên hai đội.
+
+Tên 4 vận động viên.
+
+Điểm từng set.
+
+Số set thắng.
+
+Trạng thái trận đấu.
+
+8.3. Trạng thái trận đấu
+
+Các trạng thái:
+
+Chưa diễn ra.
+
+Đang diễn ra.
+
+Đã hoàn thành.
+
+Chờ tie-break.
+
+Cần xác nhận lại.
+
+8.4. Undo và chỉnh sửa
+
+Cho phép:
+
+Undo thao tác cộng/trừ gần nhất.
+
+Chỉnh sửa điểm.
+
+Sửa kết quả đã hoàn thành.
+
+Mọi thay đổi phải lưu lịch sử.
+
+Lưu lại:
+
+Người thực hiện.
+
+Thời gian.
+
+Điểm cũ.
+
+Điểm mới.
+
+Hành động.
+
+Khi sửa kết quả đã hoàn thành, phải có hộp thoại xác nhận.
+
+Không âm thầm ghi đè kết quả.
+
+8.5. Xử lý đồng thời
+
+Tất cả trọng tài đều có quyền cập nhật tất cả các trận.
+
+Nếu hai trọng tài cùng chỉnh một trận:
+
+Phải phát hiện dữ liệu đã thay đổi.
+
+Làm mới trạng thái mới nhất.
+
+Không âm thầm ghi đè dữ liệu cũ.
+
+Hiển thị thông báo xung đột khi cần.
+
+Sử dụng Supabase Realtime để đồng bộ điểm giữa các thiết bị.
+
+Việc cập nhật tỷ số phải được lưu vào Database trước khi hiển thị thông báo lưu thành công.
+
+PHẦN 9. BẢNG XẾP HẠNG VÀ TÍNH HIỆU SỐ
+
+Tạo bảng xếp hạng tự động cho từng bảng A, B, C, D.
+
+Mỗi đội có:
+
+Chỉ số
+
+Ý nghĩa
+
+Số trận
+
+Số trận đã thi đấu
+
+Thắng
+
+Số trận thắng
+
+Thua
+
+Số trận thua
+
+Điểm ghi
+
+Tổng điểm ghi được
+
+Điểm thua
+
+Tổng điểm bị ghi
+
+Hiệu số
+
+Điểm ghi - Điểm thua
+
+Xếp hạng
+
+Thứ hạng trong bảng
+
+Công thức:
+
+Hiệu số = Tổng điểm ghi được - Tổng điểm bị ghi.
+
+Chỉ tính các trận vòng bảng chính thức.
+
+Không cộng điểm của trận tie-break vào hiệu số vòng bảng chính thức.
+
+9.1. Quy tắc xếp hạng
+
+Ưu tiên:
+
+Số trận thắng.
+
+Hiệu số điểm.
+
+Nếu vẫn bằng nhau: tổ chức tie-break.
+
+Không tự ý thêm tiêu chí khác vào trước tie-break.
+
+9.2. Tie-break nếu 2 đội bằng nhau
+
+Tạo một trận tie-break:
+
+Một set.
+
+15 điểm.
+
+Thắng cách biệt 2 điểm.
+
+Không giới hạn điểm tối đa.
+
+Đội thắng được xếp trên.
+
+9.3. Tie-break nếu cả 3 đội bằng nhau
+
+Tổ chức mini round robin:
+
+Trận 1: Đội 1 vs Đội 2.
+
+Trận 2: Đội 1 vs Đội 3.
+
+Trận 3: Đội 2 vs Đội 3.
+
+Mỗi trận:
+
+Một set 15 điểm.
+
+Thắng cách biệt 2 điểm.
+
+Không giới hạn điểm tối đa.
+
+Xếp hạng tie-break theo:
+
+Số trận thắng.
+
+Hiệu số điểm tie-break.
+
+Tổng điểm ghi được trong tie-break.
+
+Không cộng điểm tie-break vào thống kê vòng bảng ban đầu.
+
+9.4. Nếu tie-break vẫn hòa
+
+Nếu còn hai đội bằng nhau:
+
+Tổ chức một trận quyết định.
+
+Một set 15 điểm.
+
+Thắng cách biệt 2 điểm.
+
+Nếu trường hợp đặc biệt vẫn không phân định được:
+
+Tạm dừng việc xác nhận thứ hạng.
+
+Cho phép Admin quyết định kết quả.
+
+Bắt buộc ghi lý do.
+
+Lưu lịch sử quyết định.
+
+Không tự ý chọn đội đi tiếp bằng random.
+
+9.5. Điều kiện đi tiếp
+
+Mỗi bảng lấy 2 đội đứng đầu.
+
+Tổng cộng 8 đội đi tiếp.
+
+Không được sinh tứ kết nếu chưa giải quyết hết các tình huống tie-break có ảnh hưởng đến thứ hạng.
+
+PHẦN 10. VÒNG LOẠI TRỰC TIẾP
+
+Lưu ý: 8 đội vào vòng tiếp theo được gọi là vòng TỨ KẾT, không phải vòng 1/8.
+
+10.1. Tứ kết
+
+Có 8 đội, 4 trận.
+
+Cách ghép:
+
+Trận
+
+Đội
+
+Tứ kết 1
+
+Nhất A vs Nhì B
+
+Tứ kết 2
+
+Nhất B vs Nhì A
+
+Tứ kết 3
+
+Nhất C vs Nhì D
+
+Tứ kết 4
+
+Nhất D vs Nhì C
+
+Thể thức:
+
+BO3.
+
+Mỗi set 15 điểm.
+
+Thắng cách biệt 2 điểm.
+
+Không giới hạn điểm tối đa.
+
+10.2. Bán kết
+
+Có 4 đội, 2 trận.
+
+Cách ghép:
+
+Trận
+
+Đội
+
+Bán kết 1
+
+Thắng Tứ kết 1 vs Thắng Tứ kết 3
+
+Bán kết 2
+
+Thắng Tứ kết 2 vs Thắng Tứ kết 4
+
+Thể thức:
+
+BO3.
+
+Mỗi set 15 điểm.
+
+Thắng cách biệt 2 điểm.
+
+Không giới hạn điểm tối đa.
+
+10.3. Tranh hạng 3
+
+Hai đội thua bán kết thi đấu.
+
+Thể thức:
+
+BO3.
+
+Mỗi set 21 điểm.
+
+Thắng cách biệt 2 điểm.
+
+Không giới hạn điểm tối đa.
+
+10.4. Chung kết
+
+Hai đội thắng bán kết thi đấu.
+
+Thể thức:
+
+BO3.
+
+Mỗi set 21 điểm.
+
+Thắng cách biệt 2 điểm.
+
+Không giới hạn điểm tối đa.
+
+10.5. Thuật toán BO3
+
+Với tất cả trận BO3:
+
+Mỗi set được lưu riêng.
+
+Hiển thị tỷ số từng set.
+
+Tự tính số set thắng.
+
+Đội thắng 2 set trước là đội thắng trận.
+
+Không bắt buộc đánh set thứ 3 nếu một đội đã thắng 2 set.
+
+Không cho phép tạo quá 3 set.
+
+Cho phép Admin và Referee chỉnh sửa tỷ số theo quyền đã quy định.
+
+Tự động cập nhật sơ đồ bracket sau khi trận đấu hoàn thành.
+
+Nếu sửa kết quả của một trận đã ảnh hưởng đến trận phía sau, phải kiểm tra các trận liên quan và cảnh báo Admin trước khi cập nhật nhánh đấu. Không tự động xóa kết quả trận phía sau.
+
+PHẦN 11. QUẢN LÝ SÂN VÀ LỊCH THI ĐẤU
+
+Admin có thể:
+
+Tạo sân đấu.
+
+Sửa tên sân.
+
+Xóa sân khi chưa được sử dụng.
+
+Tạo thời gian thi đấu.
+
+Gán trận vào sân.
+
+Chọn ngày thi đấu.
+
+Chọn giờ thi đấu.
+
+Gán trọng tài phụ trách.
+
+Chỉnh sửa lịch.
+
+Đổi sân.
+
+Mặc định có thể tạo:
+
+Sân 1.
+
+Sân 2.
+
+Sân 3.
+
+Sân 4.
+
+Cho phép thay đổi số sân tùy thực tế.
+
+Tạo các giao diện:
+
+Lịch theo danh sách.
+
+Lịch theo sân.
+
+Lịch theo ngày.
+
+Lịch các trận sắp diễn ra.
+
+Lịch các trận đã hoàn thành.
+
+Cảnh báo:
+
+Một sân có nhiều trận cùng thời gian.
+
+Một đội bị xếp hai trận cùng thời điểm.
+
+Thiếu sân.
+
+Trận chưa được lên lịch.
+
+Cho phép Admin xác nhận nếu muốn giữ lịch có cảnh báo.
+
+Trọng tài có thể lọc trận theo sân, ngày và trạng thái.
+
+Việc phân công trọng tài chỉ phục vụ điều phối. Tất cả tài khoản Referee vẫn được quyền cập nhật tất cả trận.
+
+PHẦN 12. DASHBOARD
+
+Thiết kế Dashboard hiện đại.
+
+Hiển thị:
+
+Tên giải đấu.
+
+Trạng thái giải.
+
+Số lượng vận động viên.
+
+Số lượng đội.
+
+Số bảng.
+
+Tổng số trận.
+
+Trận đã hoàn thành.
+
+Trận đang diễn ra.
+
+Trận chưa diễn ra.
+
+Bảng xếp hạng thu gọn.
+
+Các trận đấu gần nhất.
+
+Các trận sắp diễn ra.
+
+Đội dẫn đầu mỗi bảng.
+
+Có thống kê trực quan bằng chart khi thực sự hữu ích.
+
+Dashboard phải tự động cập nhật khi dữ liệu thay đổi.
+
+PHẦN 13. SƠ ĐỒ BRACKET
+
+Tạo giao diện bracket trực quan.
+
+Hiển thị:
+
+Tứ kết.
+
+Bán kết.
+
+Tranh hạng 3.
+
+Chung kết.
+
+Mỗi trận thể hiện:
+
+Tên đội.
+
+Thành viên.
+
+Điểm từng set.
+
+Số set thắng.
+
+Trạng thái trận.
+
+Đội chiến thắng.
+
+Bracket phải tự động cập nhật dựa trên kết quả thật trong Database.
+
+Cho phép xem cả trên desktop và mobile.
+
+PHẦN 14. THIẾT KẾ DATABASE SUPABASE
+
+Tạo Database theo mô hình quan hệ.
+
+Các bảng chính:
+
+tournaments
+
+id
+
+name
+
+slug
+
+event_date
+
+location
+
+description
+
+status
+
+is_public
+
+created_by
+
+created_at
+
+profiles
+
+id liên kết auth.users
+
+full_name
+
+created_at
+
+tournament_members
+
+id
+
+tournament_id
+
+user_id
+
+role: admin hoặc referee
+
+players
+
+id
+
+full_name
+
+created_at
+
+tournament_players
+
+id
+
+tournament_id
+
+player_id
+
+skill_level
+
+note
+
+status
+
+teams
+
+id
+
+tournament_id
+
+team_type
+
+team_name
+
+status
+
+created_at
+
+team_members
+
+id
+
+team_id
+
+tournament_player_id
+
+groups
+
+id
+
+tournament_id
+
+group_name
+
+group_teams
+
+id
+
+group_id
+
+team_id
+
+courts
+
+id
+
+tournament_id
+
+court_name
+
+status
+
+matches
+
+id
+
+tournament_id
+
+group_id nullable
+
+tie_break_event_id nullable
+
+match_number
+
+stage
+
+team_a_id
+
+team_b_id
+
+winner_team_id
+
+court_id
+
+scheduled_at
+
+assigned_referee_id nullable
+
+target_points
+
+best_of
+
+win_by
+
+status
+
+created_at
+
+updated_at
+
+match_sets
+
+id
+
+match_id
+
+set_number
+
+score_a
+
+score_b
+
+status
+
+updated_at
+
+tie_break_events
+
+id
+
+tournament_id
+
+group_id
+
+event_type
+
+status
+
+created_at
+
+draw_history
+
+id
+
+tournament_id
+
+draw_type
+
+result_json
+
+performed_by
+
+created_at
+
+confirmed_at
+
+match_score_audit
+
+id
+
+match_id
+
+match_set_id
+
+old_score_a
+
+old_score_b
+
+new_score_a
+
+new_score_b
+
+action
+
+user_id
+
+created_at
+
+tournament_activity_logs
+
+id
+
+tournament_id
+
+user_id
+
+action
+
+details
+
+created_at
+
+tournament_settings
+
+id
+
+tournament_id
+
+settings_json
+
+updated_at
+
+Có thể bổ sung các trường cần thiết để đảm bảo quan hệ, tính toàn vẹn và lịch sử dữ liệu.
+
+Sử dụng khóa ngoại, unique constraint, check constraint và index phù hợp.
+
+Mỗi giải đấu phải được định danh bằng tournament_id trong các bảng dữ liệu nghiệp vụ.
+
+Đặc biệt:
+
+Một vận động viên không thể thuộc hai đội trong cùng một giải.
+
+Một đội chỉ có đúng hai thành viên.
+
+Một đội chỉ thuộc một bảng trong một giải.
+
+Một trận không được đấu với chính nó.
+
+Không cho phép lưu điểm âm.
+
+Không tạo trùng lịch đấu.
+
+Không để người dùng ngoài giải đấu chỉnh sửa dữ liệu.
+
+Sử dụng Database View hoặc RPC để tính bảng xếp hạng từ kết quả trận đấu.
+
+Không lưu bảng xếp hạng bằng các con số nhập tay.
+
+PHẦN 15. DATABASE FUNCTIONS VÀ TÍNH TOÀN VẸN
+
+Tạo các PostgreSQL Functions/RPC cho các thao tác quan trọng:
+
+create_tournament_with_admin
+
+generate_team_draw
+
+confirm_team_draw
+
+generate_group_draw
+
+confirm_group_draw
+
+generate_group_matches
+
+generate_tie_break_matches
+
+save_match_set_score
+
+update_match_result
+
+generate_knockout_matches
+
+advance_winners
+
+resolve_group_standings
+
+reset_tournament_stage
+
+Các thao tác tạo đội, ghép đội, chia bảng, tạo trận và lưu điểm quan trọng phải thực hiện trong transaction khi phù hợp.
+
+Kiểm tra quyền của người gọi ngay trong Database Function.
+
+Không tin tưởng role được truyền từ frontend.
+
+Với Function sử dụng SECURITY DEFINER:
+
+Kiểm tra auth.uid().
+
+Kiểm tra quyền Admin hoặc Referee.
+
+Cố định search_path an toàn.
+
+Chỉ cấp EXECUTE cho đúng vai trò.
+
+Không để người dùng ẩn danh gọi những thao tác ghi dữ liệu.
+
+Tạo RLS cho tất cả bảng có thể truy cập từ Supabase API.
+
+Quyền:
+
+Admin: quản lý dữ liệu giải được tham gia với vai trò Admin.
+
+Referee: xem dữ liệu giải và cập nhật tỷ số tất cả trận.
+
+Spectator/anon: chỉ đọc dữ liệu thuộc giải đấu đã công khai.
+
+Không cho Spectator ghi bất kỳ dữ liệu nào.
+
+Không sử dụng service_role key ở frontend.
+
+PHẦN 16. SUPABASE REALTIME
+
+Sử dụng Supabase Realtime để đồng bộ:
+
+Điểm số.
+
+Trạng thái trận đấu.
+
+Kết quả set.
+
+Bảng xếp hạng.
+
+Trận thắng/thua.
+
+Bracket.
+
+Trạng thái giải đấu.
+
+Khi trọng tài cập nhật điểm:
+
+Màn hình Admin phải cập nhật.
+
+Màn hình Spectator phải cập nhật.
+
+Các thiết bị đang xem trận phải cập nhật.
+
+Không bắt người xem F5 để xem kết quả mới.
+
+Đăng ký và hủy realtime subscriptions đúng vòng đời React để tránh tạo nhiều kết nối không cần thiết.
+
+PHẦN 17. SAO LƯU VÀ QUẢN LÝ DỮ LIỆU
+
+Admin có thể:
+
+Xuất dữ liệu giải đấu ra JSON.
+
+Xuất danh sách VĐV CSV.
+
+Xuất kết quả CSV.
+
+Xem lịch sử thao tác.
+
+Xem lịch sử chỉnh sửa tỷ số.
+
+Reset từng giai đoạn với xác nhận.
+
+Lưu trữ giải đấu đã hoàn thành.
+
+Không tự động xóa dữ liệu cũ.
+
+Reset phải có cảnh báo tác động đến các dữ liệu phụ thuộc.
+
+PHẦN 18. DANH SÁCH CÁC TRANG
+
+Tạo các route và màn hình:
+
+/login
+Đăng nhập Admin và Referee.
+
+/tournaments
+Danh sách giải đấu.
+
+/tournaments/new
+Tạo giải mới.
+
+/tournament/:id/dashboard
+Dashboard giải đấu.
+
+/tournament/:id/players
+Quản lý vận động viên.
+
+/tournament/:id/team-draw
+Wheel of Names.
+
+/tournament/:id/teams
+Quản lý đội.
+
+/tournament/:id/group-draw
+Random chia bảng.
+
+/tournament/:id/groups
+Danh sách 4 bảng.
+
+/tournament/:id/schedule
+Lịch thi đấu và sân.
+
+/tournament/:id/matches
+Danh sách trận đấu.
+
+/tournament/:id/referee
+Giao diện trọng tài nhập điểm.
+
+/tournament/:id/standings
+Bảng xếp hạng.
+
+/tournament/:id/knockout
+Bracket loại trực tiếp.
+
+/tournament/:id/settings
+Cài đặt và quản lý tài khoản.
+
+/public/:slug
+Trang công khai dành cho người xem.
+
+Tất cả các màn hình phải responsive.
+
+PHẦN 19. UI/UX DESIGN
+
+Phong cách thiết kế:
+
+Modern sports dashboard.
+
+Chuyên nghiệp.
+
+Gọn gàng.
+
+Dễ đọc.
+
+Dễ thao tác.
+
+Phù hợp giải cầu lông.
+
+Ưu tiên trải nghiệm thực tế.
+
+Màu sắc đề xuất:
+
+Navy / xanh đậm làm màu chính.
+
+Trắng và xám nhạt cho nền.
+
+Xanh lá cho trạng thái thắng.
+
+Đỏ cho trạng thái thua.
+
+Cam cho trạng thái đang thi đấu.
+
+Màu phân biệt ba nhóm trình độ.
+
+Desktop:
+
+Sidebar bên trái.
+
+Header ở trên.
+
+Nội dung chính ở giữa.
+
+Mobile:
+
+Navigation dạng mobile-friendly.
+
+Nút nhập điểm lớn.
+
+Scoreboard dễ thao tác.
+
+Không để bảng điểm bị vỡ layout.
+
+Các màn hình người xem có thể hiển thị tốt trên điện thoại.
+
+Thiết kế riêng:
+
+Wheel of Names phải bắt mắt.
+
+Random chia bảng phải có animation hấp dẫn.
+
+Bracket rõ ràng.
+
+Scoreboard nổi bật.
+
+Bảng xếp hạng dễ so sánh.
+
+Dùng modal xác nhận cho các thao tác quan trọng.
+
+Sử dụng toast tiếng Việt cho thành công và lỗi.
+
+PHẦN 20. YÊU CẦU VẬN HÀNH VÀ KIỂM THỬ
+
+Không được tạo các nút chỉ để trang trí.
+
+Tất cả chức năng phải hoạt động thực sự.
+
+Không hardcode dữ liệu trận đấu và kết quả.
+
+Không tự tạo tên vận động viên thật hoặc kết quả giải đấu giả.
+
+Có empty state khi chưa có dữ liệu.
+
+Có loading state khi tải Database.
+
+Có error state khi kết nối Supabase thất bại.
+
+Có cảnh báo khi mất kết nối Internet.
+
+Không báo lưu thành công nếu Supabase chưa xác nhận.
+
+Kiểm thử các trường hợp:
+
+Tạo giải đấu mới.
+
+Thêm đủ 24 vận động viên.
+
+Kiểm tra số lượng trình độ.
+
+Ghép đủ 12 đội, không trùng thành viên.
+
+Random 4 bảng đúng điều kiện.
+
+Mỗi bảng có đúng 3 đội.
+
+Tạo đúng 12 trận vòng bảng.
+
+Nhập điểm 30-28 và xác định chiến thắng.
+
+Nhập 30-29 và chưa xác định chiến thắng.
+
+Nhập 31-29 và xác định chiến thắng.
+
+Nhập điểm trực tiếp và bằng nút +1/-1.
+
+Chỉnh sửa tỷ số đã lưu.
+
+Tính chính xác hiệu số.
+
+Xử lý tie-break hai đội.
+
+Xử lý mini round robin ba đội.
+
+Tạo đúng 4 trận tứ kết.
+
+Tạo đúng 2 trận bán kết.
+
+Tạo trận tranh hạng 3 và chung kết.
+
+Nhập BO3 và tự xác định đội thắng 2 set.
+
+Kiểm tra Admin và Referee có quyền đúng.
+
+Kiểm tra Spectator không thể chỉnh sửa dữ liệu.
+
+Kiểm tra realtime trên nhiều thiết bị.
+
+Kiểm tra xung đột khi hai trọng tài cùng cập nhật một trận.
+
+Kiểm tra chỉnh sửa kết quả không làm mất dữ liệu nhánh đấu.
+
+Kiểm tra giải đấu cũ không bị ảnh hưởng khi tạo giải mới.
+
+Viết các test phù hợp cho các thuật toán quan trọng và các chính sách bảo mật RLS.
+
+PHẦN 21. QUY TRÌNH TRIỂN KHAI
+
+Hãy thực hiện xây dựng theo thứ tự:
+
+Giai đoạn 1:
+
+Kiểm tra kết nối Supabase.
+
+Thiết kế Database.
+
+Tạo migrations.
+
+Tạo RLS.
+
+Tạo Authentication.
+
+Thiết lập vai trò.
+
+Giai đoạn 2:
+
+Tạo giao diện chính.
+
+Sidebar.
+
+Dashboard.
+
+Quản lý giải đấu.
+
+Quản lý vận động viên.
+
+Giai đoạn 3:
+
+Wheel of Names.
+
+Thuật toán ghép 12 đội.
+
+Random chia 4 bảng.
+
+Lịch sử bốc thăm.
+
+Giai đoạn 4:
+
+Lịch thi đấu.
+
+Nhập điểm.
+
+Quản lý sân.
+
+Bảng xếp hạng.
+
+Tie-break.
+
+Giai đoạn 5:
+
+Bracket.
+
+Tứ kết.
+
+Bán kết.
+
+Tranh hạng 3.
+
+Chung kết.
+
+Giai đoạn 6:
+
+Realtime.
+
+Phân quyền.
+
+Public spectator page.
+
+Kiểm thử.
+
+Sao lưu dữ liệu.
+
+Hoàn thiện UI/UX.
+
+Sau mỗi giai đoạn hãy kiểm tra các chức năng đã xây dựng.
+
+Không bỏ qua Backend/Database để chỉ tạo giao diện mẫu.
+
+Không đánh dấu hoàn thành một tính năng nếu chưa kết nối và kiểm thử hoạt động thực tế.
+
+Nếu gặp vấn đề về kết nối hoặc quyền Supabase, hãy thông báo chính xác cần người dùng thao tác gì thay vì tạo dữ liệu giả.
+
+Ưu tiên tính đúng đắn của nghiệp vụ, tính toàn vẹn dữ liệu và trải nghiệm sử dụng trên điện thoại của trọng tài.
+
+MỤC TIÊU CUỐI CÙNG: Xây dựng một website quản lý giải cầu lông nội bộ hoàn chỉnh, có thể sử dụng thực tế, có thể tái sử dụng cho các mùa giải hàng năm và có khả năng mở rộng thêm các thể thức thi đấu trong tương lai.
