@@ -25,6 +25,8 @@ Vào **SQL Editor** trên Supabase Dashboard, lần lượt mở và chạy các
 15. `supabase/migrations/016_fix_undo_score_rpc_overload.sql` — Ép kiểu rõ ràng khi Undo gọi RPC lưu tỷ số có nhiều overload.
 16. `supabase/migrations/017_allow_empty_knockout_teams.sql` — Cho phép để trống đội ở các trận loại trực tiếp trước khi có đội thắng vòng trước.
 17. `supabase/migrations/018_copy_players_legacy_schema.sql` — Hỗ trợ sao chép vận động viên trên schema cũ có cột `full_name`.
+18. `supabase/migrations/019_repair_tie_break_event_type.sql` — Sửa constraint `event_type` của tie-break để hỗ trợ `decider` trên database cũ.
+19. `supabase/migrations/020_repair_tie_break_foreign_keys.sql` — Sửa khóa ngoại `tournament_id` và `group_id` của tie-break về `tournaments` và `groups`.
 
 Nếu trang khởi tạo bốc thăm vẫn báo HTTP 404/PGRST202, chạy lại `005_draw_rpc_repair.sql` rồi đợi PostgREST reload vài giây và đăng nhập lại.
 Nếu trang random chia bảng báo lỗi HTTP 400, chạy `007_fix_group_draw_rpc.sql` rồi tải lại trang.
@@ -38,6 +40,9 @@ Nếu lưu tỷ số báo `matches_status_check`, chạy `015_repair_matches_sta
 Nếu Undo báo `save_match_set_score ... is not unique`, chạy `016_fix_undo_score_rpc_overload.sql` rồi thử hoàn tác lại.
 Nếu sinh Tứ kết báo `team_a_id` hoặc `team_b_id` không được NULL, chạy `017_allow_empty_knockout_teams.sql` rồi thử lại.
 Nếu sao chép VĐV báo lỗi ràng buộc trên `tournament_players`, chạy `018_copy_players_legacy_schema.sql` rồi thử lại.
+Nếu tạo tie-break báo lỗi `tie_break_event_type_check` hoặc `tie_break_events_event_type_check`, chạy `019_repair_tie_break_event_type.sql` rồi thử lại.
+Nếu tạo tie-break báo lỗi khóa ngoại `tie_break_events_tournament_id_group_id_fkey` trỏ tới `tournament_groups`, chạy `020_repair_tie_break_foreign_keys.sql` rồi thử lại.
+Nếu tạo tie-break báo `matches_tournament_id_group_id_team_a_id_team_b_id_key` hoặc `already exists`, chạy `021_repair_legacy_match_pair_constraint.sql` rồi thử lại.
 
 ## Bước 3: Cấu hình Authentication (Không mở đăng ký công khai)
 1. Vào **Authentication → Providers → Email**.

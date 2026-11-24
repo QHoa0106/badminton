@@ -11,6 +11,7 @@ import {
   Sparkles,
   Lock,
   ArrowRight,
+  Music2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
@@ -116,6 +117,8 @@ export function TeamDrawPage() {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const tickTimerRef = useRef<number | null>(null)
+  const [backgroundMusicEnabled, setBackgroundMusicEnabled] = useState(false)
+  const backgroundMusicRef = useRef<HTMLIFrameElement | null>(null)
 
   const drawQueue = useMemo(
     () =>
@@ -204,6 +207,19 @@ export function TeamDrawPage() {
       if (tickTimerRef.current) window.clearInterval(tickTimerRef.current)
     }
   }, [tournament?.id, isConfirmed])
+
+  useEffect(() => {
+    const iframe = backgroundMusicRef.current
+    if (!iframe?.contentWindow) return
+    iframe.contentWindow.postMessage(
+      JSON.stringify({
+        event: 'command',
+        func: backgroundMusicEnabled ? 'playVideo' : 'pauseVideo',
+        args: [],
+      }),
+      '*'
+    )
+  }, [backgroundMusicEnabled])
 
   if (!tournament) return null
 
@@ -359,6 +375,13 @@ export function TeamDrawPage() {
 
   return (
     <div className="space-y-6">
+      <iframe
+        ref={backgroundMusicRef}
+        className="hidden"
+        title="Nhạc nền bốc thăm"
+        src="https://www.youtube.com/embed/atq9S7pp1rQ?enablejsapi=1&autoplay=0&controls=0&loop=1&playlist=atq9S7pp1rQ"
+        allow="autoplay"
+      />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-extrabold text-navy-950 flex items-center gap-2">
@@ -377,6 +400,14 @@ export function TeamDrawPage() {
           >
             {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
             {soundEnabled ? 'Âm thanh: Bật' : 'Âm thanh: Tắt'}
+          </Button>
+          <Button
+            variant={backgroundMusicEnabled ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setBackgroundMusicEnabled((enabled) => !enabled)}
+          >
+            <Music2 className="h-4 w-4" />
+            {backgroundMusicEnabled ? 'Nhạc nền: Bật' : 'Nhạc nền: Tắt'}
           </Button>
           {isConfirmed && (
             <Button asChild variant="success" size="sm">
