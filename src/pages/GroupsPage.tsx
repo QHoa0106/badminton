@@ -44,7 +44,7 @@ export function GroupsPage() {
                         {idx + 1}. {gt.team?.team_name}
                       </span>
                       <Badge variant={gt.team?.team_type === 'TB-_TBY' ? 'tbMinus' : 'tbyPlus'}>
-                        {gt.team?.team_type === 'TB-_TBY' ? 'TB- + TBY' : 'TBY+ + TBY+'}
+                        {gt.team?.team_type === 'TB-_TBY' ? 'TB-+TBY' : 'TBY+'}
                       </Badge>
                     </div>
                     <div className="flex flex-wrap gap-1.5">

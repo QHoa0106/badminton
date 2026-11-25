@@ -92,45 +92,7 @@ describe('Kiểm tra cơ cấu 24 VĐV (6 TB-, 6 TBY, 12 TBY+)', () => {
 })
 
 describe('Kiểm tra phân bổ chia 4 bảng A, B, C, D', () => {
-  it('chấp nhận đúng 2 bảng (2 mixed + 1 plus) và 2 bảng (1 mixed + 2 plus)', () => {
-    const groups = [
-      {
-        group_name: 'A',
-        teams: [
-          { id: '1', team_type: 'TB-_TBY' as const },
-          { id: '2', team_type: 'TB-_TBY' as const },
-          { id: '3', team_type: 'TBY+_TBY+' as const },
-        ],
-      },
-      {
-        group_name: 'B',
-        teams: [
-          { id: '4', team_type: 'TB-_TBY' as const },
-          { id: '5', team_type: 'TBY+_TBY+' as const },
-          { id: '6', team_type: 'TBY+_TBY+' as const },
-        ],
-      },
-      {
-        group_name: 'C',
-        teams: [
-          { id: '7', team_type: 'TB-_TBY' as const },
-          { id: '8', team_type: 'TB-_TBY' as const },
-          { id: '9', team_type: 'TBY+_TBY+' as const },
-        ],
-      },
-      {
-        group_name: 'D',
-        teams: [
-          { id: '10', team_type: 'TB-_TBY' as const },
-          { id: '11', team_type: 'TBY+_TBY+' as const },
-          { id: '12', team_type: 'TBY+_TBY+' as const },
-        ],
-      },
-    ]
-    expect(validateGroupDistribution(groups).valid).toBe(true)
-  })
-
-  it('từ chối khi có bảng chứa 3 đội cùng loại', () => {
+  it('chấp nhận đúng 2 bảng mixed-only và 2 bảng plus-only', () => {
     const groups = [
       {
         group_name: 'A',
@@ -153,6 +115,82 @@ describe('Kiểm tra phân bổ chia 4 bảng A, B, C, D', () => {
         teams: [
           { id: '7', team_type: 'TB-_TBY' as const },
           { id: '8', team_type: 'TB-_TBY' as const },
+          { id: '9', team_type: 'TB-_TBY' as const },
+        ],
+      },
+      {
+        group_name: 'D',
+        teams: [
+          { id: '10', team_type: 'TBY+_TBY+' as const },
+          { id: '11', team_type: 'TBY+_TBY+' as const },
+          { id: '12', team_type: 'TBY+_TBY+' as const },
+        ],
+      },
+    ]
+    expect(validateGroupDistribution(groups).valid).toBe(true)
+  })
+
+  it('từ chối khi một bảng trộn hai nhóm đội', () => {
+    const groups = [
+      {
+        group_name: 'A',
+        teams: [
+          { id: '1', team_type: 'TB-_TBY' as const },
+          { id: '2', team_type: 'TB-_TBY' as const },
+          { id: '3', team_type: 'TBY+_TBY+' as const },
+        ],
+      },
+      {
+        group_name: 'B',
+        teams: [
+          { id: '4', team_type: 'TB-_TBY' as const },
+          { id: '5', team_type: 'TB-_TBY' as const },
+          { id: '6', team_type: 'TB-_TBY' as const },
+        ],
+      },
+      {
+        group_name: 'C',
+        teams: [
+          { id: '7', team_type: 'TBY+_TBY+' as const },
+          { id: '8', team_type: 'TBY+_TBY+' as const },
+          { id: '9', team_type: 'TBY+_TBY+' as const },
+        ],
+      },
+      {
+        group_name: 'D',
+        teams: [
+          { id: '10', team_type: 'TBY+_TBY+' as const },
+          { id: '11', team_type: 'TBY+_TBY+' as const },
+          { id: '12', team_type: 'TBY+_TBY+' as const },
+        ],
+      },
+    ]
+    expect(validateGroupDistribution(groups).valid).toBe(false)
+  })
+
+  it('từ chối khi các bảng không xếp xen kẽ theo thứ tự A-D', () => {
+    const groups = [
+      {
+        group_name: 'A',
+        teams: [
+          { id: '1', team_type: 'TB-_TBY' as const },
+          { id: '2', team_type: 'TB-_TBY' as const },
+          { id: '3', team_type: 'TB-_TBY' as const },
+        ],
+      },
+      {
+        group_name: 'B',
+        teams: [
+          { id: '4', team_type: 'TBY+_TBY+' as const },
+          { id: '5', team_type: 'TBY+_TBY+' as const },
+          { id: '6', team_type: 'TBY+_TBY+' as const },
+        ],
+      },
+      {
+        group_name: 'C',
+        teams: [
+          { id: '7', team_type: 'TBY+_TBY+' as const },
+          { id: '8', team_type: 'TBY+_TBY+' as const },
           { id: '9', team_type: 'TBY+_TBY+' as const },
         ],
       },
@@ -160,8 +198,8 @@ describe('Kiểm tra phân bổ chia 4 bảng A, B, C, D', () => {
         group_name: 'D',
         teams: [
           { id: '10', team_type: 'TB-_TBY' as const },
-          { id: '11', team_type: 'TBY+_TBY+' as const },
-          { id: '12', team_type: 'TBY+_TBY+' as const },
+          { id: '11', team_type: 'TB-_TBY' as const },
+          { id: '12', team_type: 'TB-_TBY' as const },
         ],
       },
     ]

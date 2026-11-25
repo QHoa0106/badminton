@@ -101,7 +101,12 @@ export interface Group {
   id: string
   tournament_id: string
   group_name: 'A' | 'B' | 'C' | 'D'
-  distribution_type: '2_mixed_1_plus' | '1_mixed_2_plus' | null
+  distribution_type:
+    | 'mixed_only'
+    | 'plus_only'
+    | '2_mixed_1_plus'
+    | '1_mixed_2_plus'
+    | null
   status: 'draft' | 'confirmed'
   manual_resolution_note: string | null
   manual_resolved_by: string | null

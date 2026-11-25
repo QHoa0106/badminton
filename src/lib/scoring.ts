@@ -114,8 +114,8 @@ export function validatePlayerRoster(players: Pick<TournamentPlayer, 'skill_leve
 /**
  * Kiểm tra điều kiện chia 4 bảng:
  * - 4 bảng A, B, C, D, mỗi bảng 3 đội
- * - Đúng 2 bảng có (2 TB-_TBY + 1 TBY+_TBY+)
- * - Đúng 2 bảng có (1 TB-_TBY + 2 TBY+_TBY+)
+ * - Đúng 2 bảng chỉ có đội TB-_TBY
+ * - Đúng 2 bảng chỉ có đội TBY+_TBY+
  */
 export function validateGroupDistribution(
   groups: { group_name: string; teams: Pick<Team, 'id' | 'team_type'>[] }[]
@@ -124,38 +124,53 @@ export function validateGroupDistribution(
     return { valid: false, reason: 'Phải có đúng 4 bảng đấu' }
   }
 
-  let twoMixedCount = 0
-  let oneMixedCount = 0
+  let mixedOnlyCount = 0
+  let plusOnlyCount = 0
   const seenTeams = new Set<string>()
+  const teamTypeByGroup = new Map<string, Team['team_type']>()
 
   for (const g of groups) {
     if (g.teams.length !== 3) {
       return { valid: false, reason: `Bảng ${g.group_name} phải có đúng 3 đội` }
     }
-    let mixed = 0
-    let plus = 0
+    if (teamTypeByGroup.has(g.group_name)) {
+      return { valid: false, reason: `Bảng ${g.group_name} bị lặp` }
+    }
     for (const t of g.teams) {
       if (seenTeams.has(t.id)) {
         return { valid: false, reason: 'Có đội bị trùng lặp giữa các bảng' }
       }
       seenTeams.add(t.id)
-      if (t.team_type === 'TB-_TBY') mixed += 1
-      else if (t.team_type === 'TBY+_TBY+') plus += 1
     }
-    if (mixed === 2 && plus === 1) twoMixedCount += 1
-    else if (mixed === 1 && plus === 2) oneMixedCount += 1
-    else {
+    const teamType = g.teams[0].team_type
+    if (g.teams.some((team) => team.team_type !== teamType)) {
       return {
         valid: false,
-        reason: `Bảng ${g.group_name} có phân bổ không hợp lệ (${mixed} TB-+TBY, ${plus} TBY+)`,
+        reason: `Bảng ${g.group_name} không được trộn đội TB-+TBY và TBY+`,
       }
+    }
+    teamTypeByGroup.set(g.group_name, teamType)
+    if (teamType === 'TB-_TBY') mixedOnlyCount += 1
+    else plusOnlyCount += 1
+  }
+
+  const groupTypes = ['A', 'B', 'C', 'D'].map((name) => teamTypeByGroup.get(name))
+  if (
+    groupTypes.some((teamType) => teamType === undefined) ||
+    groupTypes[0] !== groupTypes[2] ||
+    groupTypes[1] !== groupTypes[3] ||
+    groupTypes[0] === groupTypes[1]
+  ) {
+    return {
+      valid: false,
+      reason: 'Thứ tự bảng phải xen kẽ hai nhóm đội để các cặp tứ kết gặp khác nhóm',
     }
   }
 
-  if (twoMixedCount !== 2 || oneMixedCount !== 2) {
+  if (mixedOnlyCount !== 2 || plusOnlyCount !== 2) {
     return {
       valid: false,
-      reason: 'Phải có đúng 2 bảng (2 TB-+TBY, 1 TBY+) và 2 bảng (1 TB-+TBY, 2 TBY+)',
+      reason: 'Phải có đúng 2 bảng TB-+TBY và 2 bảng TBY+',
     }
   }
 

@@ -116,7 +116,7 @@ export function GroupDrawPage() {
             <Shuffle className="h-6 w-6 text-navy-700" /> Random lần lượt 4 bảng A, B, C, D
           </h2>
           <p className="text-sm text-slate-600">
-            Bắt buộc: 2 bảng gồm (2 TB-+TBY & 1 TBY+) và 2 bảng gồm (1 TB-+TBY & 2 TBY+), vị trí bảng hoàn toàn ngẫu nhiên.
+            Bảng A–D xen kẽ giữa hai nhóm đội (chiều bắt đầu random) để các cặp tứ kết gặp khác nhóm; mỗi bảng có 3 đội.
           </p>
         </div>
 
@@ -235,9 +235,13 @@ export function GroupDrawPage() {
                   <CardHeader className="pb-3 flex flex-row items-center justify-between">
                     <CardTitle className="text-lg">Bảng {g.group_name}</CardTitle>
                     <Badge variant="outline">
-                      {g.distribution_type === '2_mixed_1_plus'
-                        ? '2 (TB-+TBY) • 1 (TBY+)'
-                        : '1 (TB-+TBY) • 2 (TBY+)'}
+                      {g.distribution_type === 'mixed_only'
+                        ? 'Chỉ đội TB-+TBY'
+                        : g.distribution_type === 'plus_only'
+                          ? 'Chỉ đội TBY+'
+                          : g.distribution_type === '2_mixed_1_plus'
+                            ? '2 (TB-+TBY) • 1 (TBY+)'
+                            : '1 (TB-+TBY) • 2 (TBY+)'}
                     </Badge>
                   </CardHeader>
                   <CardContent className="space-y-2.5">
