@@ -120,9 +120,35 @@ export function TeamDrawPage() {
   const [backgroundMusicEnabled, setBackgroundMusicEnabled] = useState(false)
   const backgroundMusicRef = useRef<HTMLIFrameElement | null>(null)
 
+  const teamById = useMemo(() => new Map(teams.map((team) => [team.id, team])), [teams])
+  const playerById = useMemo(
+    () => new Map(players.map((player) => [player.id, player])),
+    [players]
+  )
+  const displayDrawPlan = useMemo(
+    () =>
+      drawPlan.map((team) => ({
+        ...team,
+        team_name: teamById.get(team.team_id)?.team_name || team.team_name,
+        player1: {
+          ...team.player1,
+          full_name:
+            playerById.get(team.player1.tournament_player_id)?.player?.full_name ??
+            team.player1.full_name,
+        },
+        player2: {
+          ...team.player2,
+          full_name:
+            playerById.get(team.player2.tournament_player_id)?.player?.full_name ??
+            team.player2.full_name,
+        },
+      })),
+    [drawPlan, playerById, teamById]
+  )
+
   const drawQueue = useMemo(
     () =>
-      drawPlan.flatMap((team) => [
+      displayDrawPlan.flatMap((team) => [
         {
           ...team.player1,
           team_order: team.order,
@@ -134,7 +160,7 @@ export function TeamDrawPage() {
           team_type: team.team_type,
         },
       ]),
-    [drawPlan]
+    [displayDrawPlan]
   )
 
   const loadHistory = async () => {
@@ -224,7 +250,7 @@ export function TeamDrawPage() {
   if (!tournament) return null
 
   const revealedPlayers = drawQueue.slice(0, revealedPlayerCount)
-  const revealedTeams = drawPlan.slice(0, Math.floor(revealedPlayerCount / 2))
+  const revealedTeams = displayDrawPlan.slice(0, Math.floor(revealedPlayerCount / 2))
   const revealedPlayerIds = new Set(revealedPlayers.map((player) => player.tournament_player_id))
 
   const remainingPlayers = players.filter(
@@ -316,7 +342,7 @@ export function TeamDrawPage() {
         }
       }
       const autoRevealedTeam = normalizedRevealedCount > nextRevealedCount
-        ? drawPlan[nextRevealedCount / 2]
+        ? displayDrawPlan[nextRevealedCount / 2]
         : null
       setRevealedPlayerCount(normalizedRevealedCount)
       setSpotlightText(

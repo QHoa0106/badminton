@@ -171,7 +171,11 @@ export function useTournamentData(tournamentId?: string, publicSlug?: string): T
           ? supabase.from('team_members').select('*').in('team_id', teamIds)
           : Promise.resolve({ data: [], error: null }),
         groupIds.length > 0
-          ? supabase.from('group_teams').select('*').in('group_id', groupIds)
+          ? supabase
+              .from('group_teams')
+              .select('*')
+              .in('group_id', groupIds)
+              .order('display_order', { ascending: true })
           : Promise.resolve({ data: [], error: null }),
         matchIds.length > 0
           ? supabase.from('match_sets').select('*').in('match_id', matchIds)
